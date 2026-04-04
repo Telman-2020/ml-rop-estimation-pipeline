@@ -1,0 +1,166 @@
+2026-04-04 14:37:53 | INFO     | ==========================================================================================
+2026-04-04 14:37:53 | INFO     | Logger initialized
+2026-04-04 14:37:53 | INFO     | Log file: C:\CodeProjects\rop_refactor\outputs\logs\rop_pipeline.log
+2026-04-04 14:37:53 | INFO     | ==========================================================================================
+2026-04-04 14:37:53 | INFO     | START | MAIN PIPELINE
+2026-04-04 14:37:53 | INFO     | START | Build data artifacts
+2026-04-04 14:37:53 | INFO     | START | Data stage 1 - Load and standardize
+2026-04-04 14:37:53 | INFO     | START | Load CSV data
+2026-04-04 14:37:53 | INFO     | Reading CSV from: C:\CodeProjects\rop_refactor\data\DrillingParameters.csv
+2026-04-04 14:37:53 | INFO     | raw_loaded_df | shape=(9040, 11) | columns=11 | total_missing=399
+2026-04-04 14:37:53 | INFO     | Checking first row for units...
+2026-04-04 14:37:53 | INFO     | Units row detected and removed. Extracted 9 unit entries.
+2026-04-04 14:37:53 | INFO     | Units extracted count: 9
+2026-04-04 14:37:53 | INFO     | END   | Load CSV data | elapsed=0.02 sec
+2026-04-04 14:37:53 | INFO     | START | Standardize dataframe
+2026-04-04 14:37:53 | INFO     | Standardized columns: ['wellname', 'depth', 'wob', 'rpm', 'torque', 'flowrate', 'spp', 'rop', 'mw_in', 'mw_out', 'bitsize']
+2026-04-04 14:37:53 | INFO     | Torque scaled for wellname=2.0 rows: 4598
+2026-04-04 14:37:53 | INFO     | standardized_df | shape=(9039, 11) | columns=11 | total_missing=398
+2026-04-04 14:37:53 | INFO     | END   | Standardize dataframe | elapsed=0.03 sec
+2026-04-04 14:37:53 | INFO     | END   | Data stage 1 - Load and standardize | elapsed=0.05 sec
+2026-04-04 14:37:53 | INFO     | START | Data stage 2 - Cleaning before imputation
+2026-04-04 14:37:53 | INFO     | Cleaning BEFORE imputation started
+2026-04-04 14:37:53 | INFO     | START | Outlier replacement with NaN
+2026-04-04 14:37:53 | INFO     | Outlier cleaning | column=depth | added_nan=0 | lower=-2294.50000 | upper=6901.50000
+2026-04-04 14:37:53 | INFO     | Outlier cleaning | column=wob | added_nan=2 | lower=-7.10000 | upper=44.10000
+2026-04-04 14:37:53 | INFO     | Outlier cleaning | column=rpm | added_nan=566 | lower=59.50000 | upper=199.50000
+2026-04-04 14:37:53 | INFO     | Outlier cleaning | column=torque | added_nan=180 | lower=-1450.00000 | upper=10070.00000
+2026-04-04 14:37:53 | INFO     | Outlier cleaning | column=flowrate | added_nan=0 | lower=-121.45002 | upper=1498.79003
+2026-04-04 14:37:53 | INFO     | Outlier cleaning | column=spp | added_nan=562 | lower=1783.50000 | upper=3523.50000
+2026-04-04 14:37:53 | INFO     | Outlier cleaning | column=rop | added_nan=617 | lower=-7.55000 | upper=17.17000
+2026-04-04 14:37:53 | INFO     | Outlier cleaning | column=mw_in | added_nan=14 | lower=19.50000 | upper=167.50000
+2026-04-04 14:37:53 | INFO     | Outlier cleaning | column=mw_out | added_nan=31 | lower=17.74874 | upper=169.53876
+2026-04-04 14:37:53 | INFO     | Total outlier values replaced with NaN: 1972
+2026-04-04 14:37:53 | INFO     | cleaned_df_after_outlier_replacement | shape=(9039, 11) | columns=11 | total_missing=2370
+2026-04-04 14:37:53 | INFO     | END   | Outlier replacement with NaN | elapsed=0.02 sec
+2026-04-04 14:37:53 | INFO     | Cleaning BEFORE imputation finished
+2026-04-04 14:37:53 | INFO     | END   | Data stage 2 - Cleaning before imputation | elapsed=0.02 sec
+2026-04-04 14:37:53 | INFO     | START | Data stage 3 - Imputation
+2026-04-04 14:37:53 | INFO     | Imputation started
+2026-04-04 14:37:53 | INFO     | START | ML imputation pipeline
+2026-04-04 14:37:53 | INFO     | Imputation input | rows=9039 | numeric_cols=9 | categorical_cols=2
+2026-04-04 14:37:53 | INFO     | Missing values before imputation: 2370
+2026-04-04 14:37:53 | INFO     | START | Imputation step 1/3 - Encode categorical variables
+2026-04-04 14:37:53 | INFO     | END   | Imputation step 1/3 - Encode categorical variables | elapsed=0.01 sec
+2026-04-04 14:37:53 | INFO     | START | Imputation step 2/3 - IterativeImputer fit_transform
+2026-04-04 14:38:01 | INFO     | END   | Imputation step 2/3 - IterativeImputer fit_transform | elapsed=7.22 sec
+2026-04-04 14:38:01 | INFO     | START | Imputation step 3/3 - Restore categorical variables
+2026-04-04 14:38:01 | INFO     | END   | Imputation step 3/3 - Restore categorical variables | elapsed=0.00 sec
+2026-04-04 14:38:01 | INFO     | Missing values after imputation: 0
+2026-04-04 14:38:01 | INFO     | imputed_df | shape=(9039, 11) | columns=11 | total_missing=0
+2026-04-04 14:38:01 | INFO     | END   | ML imputation pipeline | elapsed=7.24 sec
+2026-04-04 14:38:01 | INFO     | Imputation finished
+2026-04-04 14:38:01 | INFO     | END   | Data stage 3 - Imputation | elapsed=7.26 sec
+2026-04-04 14:38:01 | INFO     | START | Data stage 4 - Post-imputation smoothing / cleaning after imputation
+2026-04-04 14:38:01 | INFO     | Cleaning AFTER imputation started
+2026-04-04 14:38:01 | INFO     | START | Smooth target by well
+2026-04-04 14:38:01 | INFO     | Applied rolling mean smoothing | target=rop | group=wellname | window=10
+2026-04-04 14:38:01 | INFO     | END   | Smooth target by well | elapsed=0.00 sec
+2026-04-04 14:38:01 | INFO     | Cleaning AFTER imputation finished
+2026-04-04 14:38:01 | INFO     | END   | Data stage 4 - Post-imputation smoothing / cleaning after imputation | elapsed=0.00 sec
+2026-04-04 14:38:01 | INFO     | final_raw_df | shape=(9039, 11) | columns=11 | total_missing=398
+2026-04-04 14:38:01 | INFO     | final_cleaned_df | shape=(9039, 11) | columns=11 | total_missing=2370
+2026-04-04 14:38:01 | INFO     | final_imputed_df | shape=(9039, 11) | columns=11 | total_missing=0
+2026-04-04 14:38:01 | INFO     | END   | Build data artifacts | elapsed=7.34 sec
+2026-04-04 14:38:01 | INFO     | START | Build split artifacts
+2026-04-04 14:38:01 | INFO     | START | Prepare ML data and train/test split
+2026-04-04 14:38:01 | INFO     | Initial ML dataframe shape: (9039, 11)
+2026-04-04 14:38:01 | INFO     | Dropping columns: ['depth', 'wellname', 'mw_out']
+2026-04-04 14:38:01 | INFO     | X_train shape: (6327, 7) | X_test shape: (2712, 7)
+2026-04-04 14:38:01 | INFO     | y_train shape: (6327,) | y_test shape: (2712,)
+2026-04-04 14:38:01 | INFO     | Categorical features: ['bitsize']
+2026-04-04 14:38:01 | INFO     | Numeric features count: 6
+2026-04-04 14:38:01 | INFO     | END   | Prepare ML data and train/test split | elapsed=0.01 sec
+2026-04-04 14:38:01 | INFO     | END   | Build split artifacts | elapsed=0.01 sec
+2026-04-04 14:38:01 | INFO     | Starting model: ridge
+2026-04-04 14:38:01 | INFO     | START | Run Ridge Regression
+2026-04-04 14:38:01 | INFO     | Ridge metrics: {'train_r2': 0.4534769571401892, 'test_mae': 2.0756247393456295, 'test_mse': 6.9251242348204345, 'test_rmse': np.float64(2.6315630782522454), 'test_r2': 0.47560385704325336}
+2026-04-04 14:38:01 | INFO     | END   | Run Ridge Regression | elapsed=0.02 sec
+2026-04-04 14:38:01 | INFO     | Finished model: ridge
+2026-04-04 14:38:01 | INFO     | Starting model: gbr
+2026-04-04 14:38:01 | INFO     | START | Run Gradient Boosting Regressor
+2026-04-04 14:38:01 | INFO     | START | Train Gradient Boosting Regressor with Bayesian search
+2026-04-04 14:38:10 | INFO     | GBR best params: OrderedDict({'model__learning_rate': 0.061679538755918244, 'model__loss': 'huber', 'model__max_depth': 3, 'model__max_features': 'log2', 'model__min_samples_leaf': 13, 'model__min_samples_split': 13, 'model__n_estimators': 148, 'model__n_iter_no_change': 14, 'model__subsample': 0.8279822153767209, 'model__tol': 5.937320984080647e-05, 'model__validation_fraction': 0.13415957421026364})
+2026-04-04 14:38:10 | INFO     | GBR metrics | train_r2=0.7372 | test_r2=0.7359 | mae=1.3529 | rmse=1.8676
+2026-04-04 14:38:10 | INFO     | END   | Train Gradient Boosting Regressor with Bayesian search | elapsed=9.20 sec
+2026-04-04 14:38:10 | INFO     | START | GBR permutation importance
+2026-04-04 14:38:10 | INFO     | END   | GBR permutation importance | elapsed=0.20 sec
+2026-04-04 14:38:10 | INFO     | START | GBR SHAP importance
+2026-04-04 14:38:13 | WARNING  | GBR SHAP failed: Additivity check failed in TreeExplainer! Please ensure the data matrix you passed to the explainer is the same shape that the model was trained on. If your data shape is correct then please report this on GitHub. This check failed because for one of the samples the sum of the SHAP values was 7.670325, while the model output was 7.828041. If this difference is acceptable you can set check_additivity=False to disable this check.
+2026-04-04 14:38:13 | INFO     | END   | GBR SHAP importance | elapsed=3.17 sec
+2026-04-04 14:38:13 | INFO     | END   | Run Gradient Boosting Regressor | elapsed=12.57 sec
+2026-04-04 14:38:13 | INFO     | Finished model: gbr
+2026-04-04 14:38:13 | INFO     | Starting model: hgbr
+2026-04-04 14:38:13 | INFO     | START | Run Hist Gradient Boosting Regressor
+2026-04-04 14:38:13 | INFO     | START | Train Hist Gradient Boosting Regressor with Bayesian search
+2026-04-04 14:38:41 | INFO     | HGBR best params: OrderedDict({'model__l2_regularization': 1.0889237550644373, 'model__learning_rate': 0.0696604761871229, 'model__loss': 'squared_error', 'model__max_depth': 4, 'model__max_iter': 596, 'model__max_leaf_nodes': 22, 'model__min_samples_leaf': 59, 'model__n_iter_no_change': 18, 'model__tol': 0.00029360602985208155, 'model__validation_fraction': 0.20245894424862895})
+2026-04-04 14:38:41 | INFO     | HGBR metrics | train_r2=0.8689 | test_r2=0.8436 | mae=1.0403 | rmse=1.4372
+2026-04-04 14:38:41 | INFO     | END   | Train Hist Gradient Boosting Regressor with Bayesian search | elapsed=28.11 sec
+2026-04-04 14:38:41 | INFO     | START | HGBR permutation importance
+2026-04-04 14:38:44 | INFO     | END   | HGBR permutation importance | elapsed=2.69 sec
+2026-04-04 14:38:44 | INFO     | START | HGBR SHAP importance
+2026-04-04 14:38:46 | INFO     | END   | HGBR SHAP importance | elapsed=1.53 sec
+2026-04-04 14:38:46 | INFO     | END   | Run Hist Gradient Boosting Regressor | elapsed=32.37 sec
+2026-04-04 14:38:46 | INFO     | Finished model: hgbr
+2026-04-04 14:38:46 | INFO     | Starting model: svr
+2026-04-04 14:38:46 | INFO     | START | Run Support Vector Regressor
+2026-04-04 14:38:46 | INFO     | START | Train SVR model
+2026-04-04 14:38:56 | INFO     | SVR params | C=100 | epsilon=0.001 | kernel=rbf
+2026-04-04 14:38:56 | INFO     | SVR metrics | train_r2=0.8119 | test_r2=0.7973
+2026-04-04 14:38:56 | INFO     | END   | Train SVR model | elapsed=10.30 sec
+2026-04-04 14:38:56 | INFO     | SVR final metrics: {'train_r2': 0.811931557979099, 'test_r2': 0.7973017894213033, 'test_mae': 1.1059087595638353, 'test_mse': 2.676812767002082, 'test_rmse': np.float64(1.6360968085666818)}
+2026-04-04 14:38:56 | INFO     | END   | Run Support Vector Regressor | elapsed=10.31 sec
+2026-04-04 14:38:56 | INFO     | Finished model: svr
+2026-04-04 14:38:56 | INFO     | Starting model: ann
+2026-04-04 14:38:56 | INFO     | START | Run ANN Model
+2026-04-04 14:38:56 | INFO     | START | Train ANN model
+2026-04-04 14:38:56 | INFO     | ANN training started | epochs=200 | batch_size=32 | validation_split=0.20 | input_dim=12
+2026-04-04 14:39:40 | INFO     | ANN metrics | train_r2=0.8436 | test_r2=0.8269 | test_mae=1.0757 | test_rmse=1.5121
+2026-04-04 14:39:40 | INFO     | END   | Train ANN model | elapsed=44.39 sec
+2026-04-04 14:39:40 | INFO     | ANN final metrics: {'train_mae': 1.0275144577026367, 'train_r2': 0.8435707092285156, 'test_mae': 1.075701117515564, 'test_mse': 2.2862977981567383, 'test_rmse': np.float64(1.5120508583234686), 'test_r2': 0.8268730640411377}
+2026-04-04 14:39:40 | INFO     | END   | Run ANN Model | elapsed=44.39 sec
+2026-04-04 14:39:40 | INFO     | Finished model: ann
+2026-04-04 14:39:40 | INFO     | Models completed successfully: ['ridge', 'gbr', 'hgbr', 'svr', 'ann']
+2026-04-04 14:39:40 | INFO     | Results collected for models: ['ridge', 'gbr', 'hgbr', 'svr', 'ann']
+2026-04-04 14:39:40 | INFO     | Preparing to save Excel. Models available: ['ridge', 'gbr', 'hgbr', 'svr', 'ann']
+2026-04-04 14:39:41 | INFO     | Writing Excel content for model: ridge
+2026-04-04 14:39:41 | INFO     | Metrics shape for ridge: (1, 5)
+2026-04-04 14:39:41 | INFO     | Writing Excel content for model: gbr
+2026-04-04 14:39:41 | INFO     | Metrics shape for gbr: (1, 6)
+2026-04-04 14:39:41 | INFO     | Writing CV results for gbr | shape=(5, 26)
+2026-04-04 14:39:41 | INFO     | Writing extra table for gbr | sheet=gbr_built_in_feature_importance | shape=(12, 2)
+2026-04-04 14:39:41 | INFO     | Writing extra table for gbr | sheet=gbr_permutation_importance | shape=(7, 3)
+2026-04-04 14:39:41 | INFO     | Writing extra table for gbr | sheet=gbr_shap_importance_error | shape=(1, 1)
+2026-04-04 14:39:41 | INFO     | Writing Excel content for model: hgbr
+2026-04-04 14:39:41 | INFO     | Metrics shape for hgbr: (1, 10)
+2026-04-04 14:39:41 | INFO     | Writing CV results for hgbr | shape=(20, 27)
+2026-04-04 14:39:41 | INFO     | Writing extra table for hgbr | sheet=hgbr_permutation_importance | shape=(7, 3)
+2026-04-04 14:39:41 | INFO     | Writing extra table for hgbr | sheet=hgbr_shap_importance | shape=(12, 2)
+2026-04-04 14:39:41 | INFO     | Writing Excel content for model: svr
+2026-04-04 14:39:41 | INFO     | Metrics shape for svr: (1, 5)
+2026-04-04 14:39:41 | INFO     | Writing Excel content for model: ann
+2026-04-04 14:39:41 | INFO     | Metrics shape for ann: (1, 6)
+2026-04-04 14:39:41 | INFO     | Excel saved successfully to: C:\CodeProjects\rop_refactor\outputs\model_results.xlsx
+2026-04-04 14:39:41 | INFO     | START | Generate plot outputs
+2026-04-04 14:39:41 | INFO     | EDA plots directory: C:\CodeProjects\rop_refactor\outputs\plots\EDA
+2026-04-04 14:39:41 | INFO     | Metrics plots directory: C:\CodeProjects\rop_refactor\outputs\plots\Metrics
+2026-04-04 14:39:41 | INFO     | START | Generate EDA plots
+2026-04-04 14:39:41 | INFO     | Generating cleaning / preprocessing / imputation plots into EDA folder
+2026-04-04 14:39:45 | INFO     | END   | Generate EDA plots | elapsed=4.58 sec
+2026-04-04 14:39:45 | INFO     | START | Generate EDA well logs
+2026-04-04 14:39:45 | INFO     | Generating EDA well log plot for well_name=1.0
+2026-04-04 14:39:47 | INFO     | Generating EDA well log plot for well_name=2.0
+2026-04-04 14:39:48 | INFO     | END   | Generate EDA well logs | elapsed=2.92 sec
+2026-04-04 14:39:48 | INFO     | START | Generate model metric plots
+2026-04-04 14:39:48 | INFO     | Generating model evaluation plots into Metrics folder
+2026-04-04 14:39:55 | INFO     | END   | Generate model metric plots | elapsed=7.13 sec
+2026-04-04 14:39:55 | INFO     | START | Generate ANN training history plots
+2026-04-04 14:39:56 | INFO     | END   | Generate ANN training history plots | elapsed=0.33 sec
+2026-04-04 14:39:56 | INFO     | START | Generate GBR feature importance plot
+2026-04-04 14:39:56 | INFO     | END   | Generate GBR feature importance plot | elapsed=0.32 sec
+2026-04-04 14:39:56 | INFO     | Generated 26 plot files in total.
+2026-04-04 14:39:56 | INFO     | END   | Generate plot outputs | elapsed=15.27 sec
+2026-04-04 14:39:56 | INFO     | END   | MAIN PIPELINE | elapsed=122.79 sec
+2026-04-04 14:39:56 | INFO     | Saved Excel results to: C:\CodeProjects\rop_refactor\outputs\model_results.xlsx
+2026-04-04 14:39:56 | INFO     | Saved 26 visual outputs to: C:\CodeProjects\rop_refactor\outputs\plots
+2026-04-04 14:39:56 | INFO     | TOTAL SCRIPT TIME: 122.79 sec
