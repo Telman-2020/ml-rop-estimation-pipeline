@@ -116,19 +116,19 @@ main(
 ### 📊 Actual vs Predicted ROP (All Models)
 
 #### 📈 Ridge Regression
-![Ridge Regression Actual vs Predicted](outputs/plots/Metrics/ridge_regression_actual_vs_predicted.png)
+<img src="outputs/plots/Metrics/ridge_regression_actual_vs_predicted.png" width="500"/>
 
 #### 🌳 Gradient Boosting Regressor
-![Gradient Boosting Actual vs Predicted](outputs/plots/Metrics/gradient_boosting_regressor_actual_vs_predicted.png)
+<img src="outputs/plots/Metrics/gradient_boosting_regressor_actual_vs_predicted.png" width="500"/>
 
 #### 🌲 Histogram-Based Gradient Boosting
-![Hist Gradient Boosting Actual vs Predicted](outputs/plots/Metrics/hist_gradient_boosting_regressor_actual_vs_predicted.png)
+<img src="outputs/plots/Metrics/hist_gradient_boosting_regressor_actual_vs_predicted.png" width="500"/>
 
 #### 📐 Support Vector Regressor
-![SVR Actual vs Predicted](outputs/plots/Metrics/support_vector_regressor_actual_vs_predicted.png)
+<img src="outputs/plots/Metrics/support_vector_regressor_actual_vs_predicted.png" width="500"/>
 
 #### 🤖 Artificial Neural Network (MLP)
-![ANN Actual vs Predicted](outputs/plots/Metrics/ann_model_actual_vs_predicted.png)
+<img src="outputs/plots/Metrics/ann_model_actual_vs_predicted.png" width="500"/>
 
 ---
 
