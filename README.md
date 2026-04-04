@@ -101,14 +101,21 @@ main(
 ### Exploratory Data Analysis
 
 ![Example Plot](outputs/plots/EDA/01_before_cleaning_histograms.png)
+
 ![Example Plot](outputs/plots/EDA/02_after_outlier_removal_histograms.png)
+
 ![Correlation Matrix Plot](outputs/plots/EDA/03_after_imputation_histograms.png)
+
 ![Correlation Matrix Plot](outputs/plots/EDA/04_correlation_heatmap.png)
-![Correlation Matrix Plot](outputs/plots/EDA/04_correlation_heatmap.png)
+
 ![Correlation Matrix Plot](outputs/plots/05_boxplot_rop_by_bitsize.png)
+
 ![Correlation Matrix Plot](outputs/plots/EDA/06_boxplot_torque_by_bitsize.png)
+
 ![Correlation Matrix Plot](outputs/plots/EDA/07_boxplot_rpm_by_bitsize.png)
+
 ![Correlation Matrix Plot](outputs/plots/EDA/eda_well_1.0_logs.png)
+
 ![Correlation Matrix Plot](outputs/plots/EDA/eda_well_2.0_logs.png)
 ------------------------------------------------------------------------
 
