@@ -101,15 +101,17 @@ main(
 ### Exploratory Data Analysis
 
 ![Plot1](outputs/plots/EDA/01_before_cleaning_histograms.png)
+
 ![Plot2](outputs/plots/EDA/02_after_outlier_removal_histograms.png)
+
 ![Plot4](outputs/plots/EDA/04_correlation_heatmap.png)
 
 ### Model Performance Metrics
-Ridge regression result
+Ridge regression result, Well # 2
 ![Model Performance](outputs/plots/Metrics/ridge_regression_well_2_logs_with_prediction.png)
-Gradient boosting regression result
+Gradient boosting regression result, Well # 2
 ![Model Performance](outputs/plots/Metrics/gradient_boosting_regressor_well_2_logs_with_prediction.png)
-Hist Gradient boosting regression result
+Hist Gradient boosting regression result, Well # 2
 ![Model Performance](outputs/plots/Metrics/hist_gradient_boosting_regressor_well_2_logs_with_prediction.png)
 
 
