@@ -297,45 +297,111 @@ def prepare_ml_data(
     df,
     target="rop",
     categorical_features=None,
-    stratify_col="bitsize",
+    stratify_col=None,   # kept for compatibility
     drop_cols=None,
     test_size=0.3,
-    random_state=42
+    random_state=42,
+    well_col="wellname",
+    depth_col="depth",
+    block_size= 30, # as the consecutive depth intervals (one meter apart) within each 
+                    # well are likely to be correlated, we use block-wise splitting 
+                    # to avoid data leakage between train and test sets
+    keep_split_cols_in_features= False
 ):
-    with log_section("Prepare ML data and train/test split"):
+    with log_section("Prepare ML data and interval-block train/test split within wells"):
         df = df.copy()
 
         if target not in df.columns:
             raise ValueError(f"'{target}' column not found in dataframe.")
+        if well_col not in df.columns:
+            raise ValueError(f"'{well_col}' column not found in dataframe.")
+        if depth_col not in df.columns:
+            raise ValueError(f"'{depth_col}' column not found in dataframe.")
 
         logger.info("Initial ML dataframe shape: %s", df.shape)
 
-        if drop_cols is not None:
-            drop_cols = [col for col in drop_cols if col in df.columns]
-            logger.info("Dropping columns: %s", drop_cols)
-            df = df.drop(columns=drop_cols)
+        drop_cols = drop_cols or []
 
-        if categorical_features is None:
-            categorical_features = [col for col in ["wellname", "bitsize"] if col in df.columns]
+        # columns required for splitting must never be dropped before split
+        protected_cols = {target, well_col, depth_col}
+        requested_drop_cols = [col for col in drop_cols if col in df.columns]
+        invalid_pre_split_drop = [col for col in requested_drop_cols if col in protected_cols]
 
-        X = df.drop(columns=[target])
+        if invalid_pre_split_drop:
+            logger.warning(
+                "Ignoring protected columns in drop_cols before split: %s",
+                invalid_pre_split_drop
+            )
+
+        # only drop columns that are not needed for split/target
+        pre_split_drop_cols = [col for col in requested_drop_cols if col not in protected_cols]
+        if pre_split_drop_cols:
+            logger.info("Dropping columns before split: %s", pre_split_drop_cols)
+            df = df.drop(columns=pre_split_drop_cols)
+
+        rng = np.random.RandomState(random_state)
+
+        df["_block_id"] = -1
+        df["_is_test"] = False
+
+        global_block_id = 0
+
+        for well_name, well_df in df.groupby(well_col, sort=False):
+            well_df_sorted = well_df.sort_values(depth_col).copy()
+            n_rows = len(well_df_sorted)
+
+            if n_rows == 0:
+                continue
+
+            n_blocks = int(np.ceil(n_rows / block_size))
+            local_block_ids = np.repeat(np.arange(n_blocks), block_size)[:n_rows]
+
+            well_df_sorted["_block_id_local"] = local_block_ids
+            unique_blocks = well_df_sorted["_block_id_local"].unique()
+
+            n_test_blocks = max(1, int(np.ceil(len(unique_blocks) * test_size)))
+            test_blocks = rng.choice(unique_blocks, size=n_test_blocks, replace=False)
+
+            well_df_sorted["_is_test"] = well_df_sorted["_block_id_local"].isin(test_blocks)
+            well_df_sorted["_block_id"] = well_df_sorted["_block_id_local"] + global_block_id
+
+            df.loc[well_df_sorted.index, "_block_id"] = well_df_sorted["_block_id"].values
+            df.loc[well_df_sorted.index, "_is_test"] = well_df_sorted["_is_test"].values
+
+            logger.info(
+                "Well '%s': %d rows | %d blocks | %d test blocks",
+                well_name, n_rows, n_blocks, n_test_blocks
+            )
+
+            global_block_id += n_blocks
+
+        train_mask = ~df["_is_test"]
+        test_mask = df["_is_test"]
+
+        if train_mask.sum() == 0:
+            raise ValueError("Train split is empty. Reduce test_size or block_size.")
+        if test_mask.sum() == 0:
+            raise ValueError("Test split is empty. Increase test_size or reduce block_size.")
+
+        # build feature frame after split
+        feature_drop_cols = [target, "_block_id", "_is_test"]
+
+        if not keep_split_cols_in_features:
+            feature_drop_cols.extend([well_col, depth_col])
+
+        X = df.drop(columns=[col for col in feature_drop_cols if col in df.columns])
         y = df[target]
 
-        stratify_values = None
-        if stratify_col is not None:
-            if stratify_col not in df.columns:
-                raise ValueError(f"stratify_col='{stratify_col}' not found in dataframe.")
-            stratify_values = df[stratify_col]
+        X_train = X.loc[train_mask].copy()
+        X_test = X.loc[test_mask].copy()
+        y_train = y.loc[train_mask].copy()
+        y_test = y.loc[test_mask].copy()
 
-        X_train, X_test, y_train, y_test = train_test_split(
-            X,
-            y,
-            test_size=test_size,
-            stratify=stratify_values,
-            random_state=random_state
-        )
+        if categorical_features is None:
+            categorical_features = [col for col in ["wellname", "bitsize"] if col in X.columns]
+        else:
+            categorical_features = [col for col in categorical_features if col in X.columns]
 
-        categorical_features = [col for col in categorical_features if col in X.columns]
         numeric_features = [col for col in X.columns if col not in categorical_features]
 
         logger.info("X_train shape: %s | X_test shape: %s", X_train.shape, X_test.shape)
@@ -363,7 +429,7 @@ def prepare_ml_data(
         )
 
         return X_train, X_test, y_train, y_test, preprocessor
-
+    
 
 def bayesian_search_gbr(
     X_train,
