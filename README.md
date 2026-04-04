@@ -98,6 +98,8 @@ main(
 
 ## 📸 Visual Outputs
 
+## 📊 Exploratory Data Analysis
+
 ### Distribution of Features Before Cleaning
 ![Feature Distributions Before Cleaning](outputs/plots/EDA/01_before_cleaning_histograms.png)
 
@@ -107,22 +109,45 @@ main(
 ### Correlation Heatmap
 ![Correlation Heatmap](outputs/plots/EDA/04_correlation_heatmap.png)
 
-## Model Performance on Well #2
+---
+
+## 📈 Model Performance
+
+### 📊 Actual vs Predicted ROP (All Models)
+
+#### 📈 Ridge Regression
+![Ridge Regression Actual vs Predicted](outputs/plots/Metrics/ridge_regression_actual_vs_predicted.png)
+
+#### 🌳 Gradient Boosting Regressor
+![Gradient Boosting Actual vs Predicted](outputs/plots/Metrics/gradient_boosting_regressor_actual_vs_predicted.png)
+
+#### 🌲 Histogram-Based Gradient Boosting
+![Hist Gradient Boosting Actual vs Predicted](outputs/plots/Metrics/hist_gradient_boosting_regressor_actual_vs_predicted.png)
+
+#### 📐 Support Vector Regressor
+![SVR Actual vs Predicted](outputs/plots/Metrics/support_vector_regressor_actual_vs_predicted.png)
+
+#### 🤖 Artificial Neural Network (MLP)
+![ANN Actual vs Predicted](outputs/plots/Metrics/ann_model_actual_vs_predicted.png)
+
+---
+
+## 🛢️ Model Predictions on Well #2
 
 ### 📈 Ridge Regression – Well #2 Logs with Predicted ROP (Last Log)
 ![Ridge Regression Prediction](outputs/plots/Metrics/ridge_regression_well_2_logs_with_prediction.png)
 
 ### 🌳 Gradient Boosting Regressor – Well #2 Logs with Predicted ROP (Last Log)
-![Gradient Boosting Regressor Prediction](outputs/plots/Metrics/gradient_boosting_regressor_well_2_logs_with_prediction.png)
+![Gradient Boosting Prediction](outputs/plots/Metrics/gradient_boosting_regressor_well_2_logs_with_prediction.png)
 
 ### 🌲 Histogram-Based Gradient Boosting Regressor – Well #2 Logs with Predicted ROP (Last Log)
-![Histogram-Based Gradient Boosting Regressor Prediction](outputs/plots/Metrics/hist_gradient_boosting_regressor_well_2_logs_with_prediction.png)
+![Hist Gradient Boosting Prediction](outputs/plots/Metrics/hist_gradient_boosting_regressor_well_2_logs_with_prediction.png)
 
 ### 📐 Support Vector Regressor – Well #2 Logs with Predicted ROP (Last Log)
-![Support Vector Regressor Prediction](outputs/plots/Metrics/support_vector_regressor_well_2_logs_with_prediction.png)
+![SVR Prediction](outputs/plots/Metrics/support_vector_regressor_well_2_logs_with_prediction.png)
 
 ### 🤖 Artificial Neural Network (MLP) – Well #2 Logs with Predicted ROP (Last Log)
-![Artificial Neural Network Prediction](outputs/plots/Metrics/ann_model_well_2_logs_with_prediction.png)
+![ANN Prediction](outputs/plots/Metrics/ann_model_well_2_logs_with_prediction.png)
 
 ------------------------------------------------------------------------
 
