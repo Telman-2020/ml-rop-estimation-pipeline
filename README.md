@@ -101,22 +101,18 @@ main(
 ### Exploratory Data Analysis
 
 ![Plot1](outputs/plots/EDA/01_before_cleaning_histograms.png)
-
 ![Plot2](outputs/plots/EDA/02_after_outlier_removal_histograms.png)
-
-![Plot3](outputs/plots/EDA/03_after_imputation_histograms.png)
-
 ![Plot4](outputs/plots/EDA/04_correlation_heatmap.png)
 
-![Plot5](outputs/plots/05_boxplot_rop_by_bitsize.png)
+### Model Performance Metrics
+Ridge regression result
+![Model Performance](outputs/plots/Metrics/ridge_regression_well_2_logs_with_prediction.png)
+Gradient boosting regression result
+![Model Performance](outputs/plots/Metrics/gradient_boosting_regressor_well_2_logs_with_prediction.png)
+Hist Gradient boosting regression result
+![Model Performance](outputs/plots/Metrics/hist_gradient_boosting_regressor_well_2_logs_with_prediction.png)
 
-![Plot6](outputs/plots/EDA/06_boxplot_torque_by_bitsize.png)
 
-![Plot7](outputs/plots/EDA/07_boxplot_rpm_by_bitsize.png)
-
-![Plot8](outputs/plots/EDA/eda_well_1.0_logs.png)
-
-![Plot9](outputs/plots/EDA/eda_well_2.0_logs.png)
 ------------------------------------------------------------------------
 
 ## 🧠 How to Interpret Results
