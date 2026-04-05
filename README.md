@@ -18,7 +18,7 @@ The main pipeline script performs the following stages:
 2. standardize columns and fix known data issues such as `torque` scaling for `wellname=2.0`
 3. replace outliers with `NaN`
 4. impute missing values with `IterativeImputer` using a small `RandomForestRegressor`
-5. smooth target variable `rop` by well using a low-pass filter (rolling mean) to omitt noise
+5. smooth target variable `rop` by well using a low-pass filter (rolling mean) to omit noise
 6. build an interval-block train/test split within wells to reduce leakage from neighbouring depth samples
 7. train and evaluate five models:
    - Ridge Regression
@@ -59,7 +59,7 @@ python rop_estimation_pipeline_log.py
 
 ## Expected input columns
 
-The pipeline expects a drilling dataset containing at least these columns (scheama):
+The pipeline expects a drilling dataset containing at least these columns (schema):
 
 - `wellname`
 - `depth`
@@ -86,7 +86,7 @@ The pipeline should save **26 plot files**, the Excel workbook (metrics performa
 
 `visualizations.py` is responsible for the plotting layer. It generates:
 - data cleaning histograms before cleaning, after outlier removal, and after imputation
-- correlation heatmap, showing any collinearirt between input features and target variable
+- correlation heatmap, showing any collinearity between input features and target variable
 - ROP / torque / RPM boxplots by bit size
 - actual vs predicted test samples scatter plots for each model
 - well overlay plots for predicted vs actual ROP
