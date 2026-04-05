@@ -1,181 +1,120 @@
-[![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)]()
-[![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-orange.svg)]()
-[![TensorFlow](https://img.shields.io/badge/TensorFlow-ANN-red.svg)]()
-[![License](https://img.shields.io/badge/License-MIT-green.svg)]()
+# ML ROP Estimation Pipeline
 
-A production-style machine learning pipeline for estimating **Rate of
-Penetration (ROP)** from drilling parameters data.
+A machine learning pipeline for estimating **Rate of Penetration (ROP)** from drilling parameter data.
 
-------------------------------------------------------------------------
+This repository focuses on a practical ML end-to-end workflow:
+- load and standardize drilling data
+- clean outliers and missing values
+- impute missing values
+- smooth the target feature per well_id
+- build a 30 meter interval-based train/test split
+- train multiple regression models
+- save metrics, logs, and plots
 
-## 📌 Project Title & Description
+## What the pipeline does
 
-### What is this project?
+The main pipeline script performs the following stages:
+1. load the CSV dataset and detect/remove a units row if present
+2. standardize columns and fix known data issues such as `torque` scaling for `wellname=2.0`
+3. replace outliers with `NaN`
+4. impute missing values with `IterativeImputer` using a small `RandomForestRegressor`
+5. smooth target variable `rop` by well using a low-pass filter (rolling mean) to omitt noise
+6. build an interval-block train/test split within wells to reduce leakage from neighbouring depth samples
+7. train and evaluate five models:
+   - Ridge Regression
+   - Gradient Boosting Regressor
+   - HistGradientBoostingRegressor
+   - Support Vector Regressor (SVR)
+   - Artificial Neural Network (ANN-MLP)
+8. export Excel results, logs, and plots
 
-The **ROP Estimation Pipeline** is a modular machine learning workflow
-designed to estimate ROP from drilling parameters log data using multiple
-regression models. This prediction could be useful to optimize the drilling operation.
+## Repository structure
 
-### What problem does it solve?
+```text
+.
+├── data/
+├── outputs/
+│   ├── logs/
+│   └── plots/
+├── rop_estimation_pipeline_log.py
+├── visualizations.py
+├── requirements.txt
+├── README.md
+└── REPORT.md
+```
 
--   Noisy sensor data\
--   Missing values\
--   Complex feature relationships
+## Quick start
 
-This pipeline automates cleaning, imputation, modelling, and evaluation.
+### 1) Install dependencies
 
-### Who is it for?
+```bash
+pip install -r requirements.txt
+```
 
--   Data scientists\
--   Drilling Engineers working with rig data\
--   ML practitioners building pipelines
+### 2) Run the pipeline
 
-------------------------------------------------------------------------
-
-## ▶️ Usage / Example
-
-### Run the pipeline
-
-``` bash
+```bash
 python rop_estimation_pipeline_log.py
 ```
 
-### Python usage
+## Expected input columns
 
-``` python
-from rop_estimation_pipeline_log import main
+The pipeline expects a drilling dataset containing at least these columns (scheama):
 
-artifacts = main()
-print(artifacts["excel_path"])
-```
+- `wellname`
+- `depth`
+- `bitsize`
+- `rop`
+- `torque`
+- `spp`
+- `rpm`
+- `mw_in`
+- `mw_out`
+- `flowrate`
+- `wob`
 
-### Access predictions
+## Output artifacts
 
-``` python
-results = artifacts["results"]
-print(results["gbr"].y_pred[:5])
-```
+Running the pipeline produces:
+- `outputs/model_results.xlsx`
+- `outputs/logs/rop_pipeline.log`
+- plot files under `outputs/plots/`
 
-------------------------------------------------------------------------
+The pipeline should save **26 plot files**, the Excel workbook (metrics performance) with estimated run time of **74.55 seconds**.
 
-## ⚙️ Configuration
+## Visualizations generated
 
-``` python
-main(
-    csv_path="data/DrillingParameters.csv",
-    plots_dir="outputs/plots",
-    results_excel_path="outputs/model_results.xlsx",
-    log_file="outputs/logs/rop_pipeline.log",
-)
-```
+`visualizations.py` is responsible for the plotting layer. It generates:
+- data cleaning histograms before cleaning, after outlier removal, and after imputation
+- correlation heatmap, showing any collinearirt between input features and target variable
+- ROP / torque / RPM boxplots by bit size
+- actual vs predicted test samples scatter plots for each model
+- well overlay plots for predicted vs actual ROP
+- input well logs with predictions
+- ANN training history
+- feature importance plots (based on Gradient boosting regressor model)
 
-### Required inputs
+## Latest model performance
 
--   CSV dataset
--   Required columns:
-    - `wellname`  
-    - `bitsize` (unit: *inches*)  
-    - `torque` (unit: klbf·in or k.lbm)  
-    - `rop` (rate of penetration — *target variable*)  
-    - `spp` (standpipe pressure, *psi*)  
-    - `rpm` (drill string rotations per minute)  
-    - `mw_in` (mud weight in)  
-    - `mw_out` (mud weight out — may be redundant)  
-    - `flowrate` (mud flow rate, *gpm*)  
-    - `wob` (weight on bit, unit: *klbf* or lbf) 
+The latest logged run on **2026-04-04** reported the following test metrics:
 
-------------------------------------------------------------------------
+| Model | Test R² | Test MAE | Test RMSE |
+|---|---:|---:|---:|
+| SVR | 0.6387 | 1.6018 | 2.2594 |
+| Hist Gradient Boosting | 0.5449 | 1.9575 | 2.5360 |
+| ANN | 0.5119 | 1.9899 | 2.6263 |
+| Gradient Boosting | 0.4539 | 2.1014 | 2.7780 |
+| Ridge Regression | 0.4029 | 2.2741 | 2.9047 |
 
-## 📊 Outputs
+In this run, **SVR** was the strongest model on the held-out test set.
 
--   Excel results → outputs/model_results.xlsx\
--   Logs → outputs/logs/rop_pipeline.log\
--   Plots → outputs/plots/
+## Notes on implementation
 
-------------------------------------------------------------------------
-
-## 📸 Visual Outputs
-
-## 📊 Exploratory Data Analysis
-
-### Distribution of Features Before Cleaning
-![Feature Distributions Before Cleaning](outputs/plots/EDA/01_before_cleaning_histograms.png)
-
-### Distribution of Features After Outlier Removal
-![Feature Distributions After Outlier Removal](outputs/plots/EDA/02_after_outlier_removal_histograms.png)
-
-### Correlation Heatmap
-![Correlation Heatmap](outputs/plots/EDA/04_correlation_heatmap.png)
-
----
-
-## 📈 Model Performance
-
-### 📊 Actual vs Predicted ROP (All Models)
-
-#### 📈 Ridge Regression
-<img src="outputs/plots/Metrics/ridge_regression_actual_vs_predicted.png" width="500"/>
-
-#### 🌳 Gradient Boosting Regressor
-<img src="outputs/plots/Metrics/gradient_boosting_regressor_actual_vs_predicted.png" width="500"/>
-
-#### 🌲 Histogram-Based Gradient Boosting
-<img src="outputs/plots/Metrics/hist_gradient_boosting_regressor_actual_vs_predicted.png" width="500"/>
-
-#### 📐 Support Vector Regressor
-<img src="outputs/plots/Metrics/support_vector_regressor_actual_vs_predicted.png" width="500"/>
-
-#### 🤖 Artificial Neural Network (MLP)
-<img src="outputs/plots/Metrics/ann_model_actual_vs_predicted.png" width="500"/>
-
----
-
-## 🛢️ Model Predictions on Well #2
-
-### 📈 Ridge Regression – Well #2 Logs with Predicted ROP (Last Log)
-![Ridge Regression Prediction](outputs/plots/Metrics/ridge_regression_well_2_logs_with_prediction.png)
-
-### 🌳 Gradient Boosting Regressor – Well #2 Logs with Predicted ROP (Last Log)
-![Gradient Boosting Prediction](outputs/plots/Metrics/gradient_boosting_regressor_well_2_logs_with_prediction.png)
-
-### 🌲 Histogram-Based Gradient Boosting Regressor – Well #2 Logs with Predicted ROP (Last Log)
-![Hist Gradient Boosting Prediction](outputs/plots/Metrics/hist_gradient_boosting_regressor_well_2_logs_with_prediction.png)
-
-### 📐 Support Vector Regressor – Well #2 Logs with Predicted ROP (Last Log)
-![SVR Prediction](outputs/plots/Metrics/support_vector_regressor_well_2_logs_with_prediction.png)
-
-### 🤖 Artificial Neural Network (MLP) – Well #2 Logs with Predicted ROP (Last Log)
-![ANN Prediction](outputs/plots/Metrics/ann_model_well_2_logs_with_prediction.png)
-
-------------------------------------------------------------------------
-
-## 🧠 How to Interpret Results
-
--   High R² → better model\
--   Low RMSE → fewer large errors\
--   Small train-test gap → good generalization
-
-------------------------------------------------------------------------
-
-## Installation
-
-``` bash
-pip install numpy pandas scikit-learn scikit-optimize shap openpyxl tensorflow keras
-```
-
-------------------------------------------------------------------------
-
-## Project Structure
-
-    .
-    ├── rop_estimation_pipeline_log.py
-    ├── visualizations.py
-    ├── data/
-    ├── outputs/
-    └── README.md
-
-------------------------------------------------------------------------
+- the train/test split is block-based within each well, which is better than a naïve random split for sequential depth data
+- the pipeline logs timings for major steps
+- Gradient Boosting and HistGradientBoosting also generate permutation importance and SHAP-based importance tables
+- the ANN training includes learning-rate scheduling and early stopping helpers
 
 ## License
 
-MIT License
+MIT
