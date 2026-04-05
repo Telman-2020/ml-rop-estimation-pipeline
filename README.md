@@ -1,5 +1,3 @@
-update this readme :# ROP Estimation Pipeline
-
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)]()
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-orange.svg)]()
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-ANN-red.svg)]()
