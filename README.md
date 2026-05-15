@@ -1,4 +1,11 @@
-# ML ROP Estimation Pipeline
+<p align="center">
+  <img src="assets/drilling-project-thumbnail.png" alt="Real-Time ROP Prediction ML thumbnail" width="900">
+</p>
+
+# Real-Time Prediction of Drilling Rate of Penetration
+
+**Author:** Telman Maghrebi  
+**Role:** Data Scientist 
 
 A machine learning pipeline for estimating **Rate of Penetration (ROP)** from drilling parameter data.
 
